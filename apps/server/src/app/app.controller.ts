@@ -1,13 +1,23 @@
-import { Controller, Get } from '@nestjs/common';
+import {Controller, Get, HttpStatus, Query, Res} from '@nestjs/common';
+import { Response } from 'express';
+import {ConfigService} from "@nestjs/config";
 
-import { AppService } from './app.service';
+interface EnvironmentVariables {
+  CLIENT_SECRET: string;
+}
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private configService: ConfigService<EnvironmentVariables>,
+  ) {}
 
-  @Get()
-  getData() {
-    return this.appService.getData();
+  @Get('lifeSignal')
+  getData(@Query('clientSecret') clientSecret, @Res() res: Response) {
+    if(clientSecret === this.configService.get('CLIENT_SECRET')) {
+      res.status(HttpStatus.OK).send();
+    } else {
+      res.status(HttpStatus.UNAUTHORIZED).send();
+    }
   }
 }
