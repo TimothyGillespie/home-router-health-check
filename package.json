@@ -9,14 +9,20 @@
   },
   "private": true,
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.6.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/typeorm": "^8.0.3",
     "express": "^4.17.2",
+    "handlebars": "^4.7.7",
+    "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "typeorm": "^0.2.41"
   },
   "devDependencies": {
     "@nestjs/schematics": "^8.0.0",
