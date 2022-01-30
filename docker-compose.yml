@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+    server:
+        image: 'private.docker.gillespie.eu/repository/gillespie-private-docker/home-router-health-check-server:latest'
+        ports:
+            - '127.0.0.1:3333:3333'
+        env_file:
+            - '.env'
+
