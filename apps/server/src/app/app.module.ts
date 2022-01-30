@@ -7,7 +7,8 @@ import {HandlebarsAdapter} from "@nestjs-modules/mailer/dist/adapters/handlebars
 import {LifeSignalStorageService} from "../services/life-signal-storage/life-signal-storage.service";
 import {LifeSignalCheckerService} from "../services/life-signal-checker/life-signal-checker.service";
 import {ScheduleModule} from "@nestjs/schedule";
-import * as Joi from "joi";
+import {environment} from "../environments/environment";
+// import * as Joi from "joi";
 
 @Module({
     imports: [
@@ -40,7 +41,7 @@ import * as Joi from "joi";
             defaults: {
                 from: `"${process.env.SENDER_NAME}" <${process.env.SENDER_EMAIL}>`,
             },
-            preview: true,
+            preview: !environment.production,
             template: {
                 dir: __dirname + '/assets/templates',
                 adapter: new HandlebarsAdapter(),
