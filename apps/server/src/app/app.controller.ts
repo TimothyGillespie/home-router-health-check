@@ -19,14 +19,15 @@ export class AppController {
 
     @Get('lifeSignal')
     getData(@Query('clientSecret') clientSecret, @Res() res: Response) {
-        this.lifeSignalStorageService.registerLifeSignal(clientSecret);
+        const success = this.lifeSignalStorageService.registerLifeSignal(clientSecret);
+        console.log('Received life signal for ' + clientSecret);
         res.status(HttpStatus.OK).send();
     }
 
     @Post('register')
-    register(@Body() registrationData: LifeSignalRegistration) {
+    async register(@Body() registrationData: LifeSignalRegistration) {
         const lifeSignalData = this.lifeSignalStorageService.createLifeSignalRequest(registrationData.email);
-        this.emailService.sendMail({
+        await this.emailService.sendMail({
             to: registrationData.email,
             subject: 'Verify Life Signal Registration',
             template: 'verify',
@@ -35,6 +36,8 @@ export class AppController {
             }
         });
 
+        console.log(`Registered ${registrationData.email}.`);
+
         return {
             clientSecret: lifeSignalData.clientSecret
         };
@@ -42,7 +45,9 @@ export class AppController {
 
     @Get('verify')
     verify(@Query('verificationSecret') verificationSecret: string) {
-        this.lifeSignalStorageService.markEmailVerified(verificationSecret);
+        const success = this.lifeSignalStorageService.markEmailVerified(verificationSecret);
+
+        console.log(success ? 'Successfully verified email with ' + verificationSecret : 'Could not verify email with ' + verificationSecret);
 
         // Not giving real feedback on any success
         return 'Successfully verified email!';

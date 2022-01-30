@@ -9,12 +9,13 @@ export class LifeSignalStorageService {
     createLifeSignalRequest(email: string): LifeSignalInfo {
         const clientSecret = randomUUID();
         const verificationSecret = randomUUID();
-        const lifeSignal = {
+        const lifeSignal: LifeSignalInfo = {
             notificationEmail: email,
             verified: false,
             clientSecret,
             verificationSecret,
             lastSignal: null,
+            status: 'UNSTARTED',
         }
 
         const toDelete = this.findClientSecretByEmail(email);
@@ -65,4 +66,5 @@ export interface LifeSignalInfo {
     verificationSecret: string;
     clientSecret: string;
     lastSignal: Date | null;
+    status: 'UNSTARTED' | 'ALIVE' | 'LOST',
 }

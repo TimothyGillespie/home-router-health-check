@@ -5,10 +5,13 @@ import { ConfigModule } from '@nestjs/config';
 import {MailerModule} from "@nestjs-modules/mailer";
 import {HandlebarsAdapter} from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import {LifeSignalStorageService} from "../services/life-signal-storage/life-signal-storage.service";
+import {LifeSignalCheckerService} from "../services/life-signal-checker/life-signal-checker.service";
+import {ScheduleModule} from "@nestjs/schedule";
 
 @Module({
     imports: [
         ConfigModule.forRoot({}),
+        ScheduleModule.forRoot(),
         MailerModule.forRoot({
             transport: {
                 host: process.env.SMTP_HOST,
@@ -34,6 +37,9 @@ import {LifeSignalStorageService} from "../services/life-signal-storage/life-sig
         }),
     ],
     controllers: [AppController],
-    providers: [LifeSignalStorageService],
+    providers: [
+        LifeSignalStorageService,
+        LifeSignalCheckerService,
+    ],
 })
 export class AppModule {}
