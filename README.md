@@ -1,94 +1,49 @@
+# Home Router Health Check
+
+This project was built in response to waking up without an Internet in my home network (the name I chose for the project is slightly inaccurate; I know).
+
+This project is supposed to send an email when the Internet is down and send another one when it is up again. Such, the  exact time it failed is known and one gets a notification when it is back up (so I don't need to check manually every minute).
+
+# How To Build
+
+Since the docker image is not publicly available, you will need to build it yourself. A Dockerfile is provided and can be run as usual:
+
+`docker build .`
+
+Building it locally requires npm:
+
+```
+npm install
+npx nx build server
+```
+
+# How To Use
+
+You will have to set up the server which has been built. Additionally, it will need node to run and configurations, which can be given via `.env` files or   environment variables. You can see a list of configurations in `env.example`.
+
+You will need an SMTP server to run this
+
+When the server is set up on a remote machine reachable from your home network (but not contained in it) you can now send a `POST` request to the `/register` endpoint. The body must contain the email Address to notify you.
+```
+{email: "my-email@example.com"}
+```
+
+The email will receive an email right away, asking to verify the given email. Click the link to verify. It will only send if verified.
+
+The response to the registration request will contain a `clientSecret`. With this we can send a life signal.
+
+To send a life signal, the `GET` endpoint `/lifeSignal?clientSecret=your-client-secret` is given. You need to put in the client secret that you received.
+
+The first life signal will start the tracking and send an email with the next full minute. It will check for a life signal every 2.5 minutes. How often you send one depends on you, but it should be more than once per 2.5 minutes. I, personally, use every minute for ease of use.
+
+If you have a Linux computer running in your home network, that may be the ideal candidate for sending the life signal. Something that is running either way or requires low energy (i.e. Raspberry Pi) is ideal.
+
+You can log into the machine and configure a cronjob. You can do this with the `crontab -e` command. In there, you can set it up to send a life signal every minute like this:
+
+```
+*/1 * * * * curl https://example.com/lifeSignal?clientSecret=your-client-secret
+```
+
+Note that you need to adjust the address to your location and use your client secret again. You will also need curl with this setup, but other clients will work just as well, such as wget.
 
 
-# HomeRouterHealthCheck
-
-This project was generated using [Nx](https://nx.dev).
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
-
-🔎 **Smart, Fast and Extensible Build System**
-
-## Adding capabilities to your workspace
-
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
-
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
-
-Below are our core plugins:
-
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
-
-There are also many [community plugins](https://nx.dev/community) you could add.
-
-## Generate an application
-
-Run `nx g @nrwl/react:app my-app` to generate an application.
-
-> You can use any of the plugins above to generate applications as well.
-
-When using Nx, you can create multiple applications and libraries in the same workspace.
-
-## Generate a library
-
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
-
-> You can also use any of the plugins above to generate libraries as well.
-
-Libraries are shareable across libraries and applications. They can be imported from `@home-router-health-check/mylib`.
-
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
