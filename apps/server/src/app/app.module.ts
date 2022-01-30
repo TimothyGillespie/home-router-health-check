@@ -7,10 +7,24 @@ import {HandlebarsAdapter} from "@nestjs-modules/mailer/dist/adapters/handlebars
 import {LifeSignalStorageService} from "../services/life-signal-storage/life-signal-storage.service";
 import {LifeSignalCheckerService} from "../services/life-signal-checker/life-signal-checker.service";
 import {ScheduleModule} from "@nestjs/schedule";
+import * as Joi from "joi";
 
 @Module({
     imports: [
-        ConfigModule.forRoot({}),
+        ConfigModule.forRoot({
+            // Not working as intended
+
+            // envFilePath: '.env.local',
+            // validationSchema: Joi.object({
+            //     SMTP_HOST: Joi.string().uri().required(),
+            //     SMTP_PORT: Joi.number().required(),
+            //     SMTP_USER: Joi.string().required(),
+            //     SMTP_USER_PW: Joi.string().required(),
+            //     SENDER_NAME: Joi.string().required(),
+            //     SENDER_EMAIL: Joi.string().email().required(),
+            //     SERVER_HOST: Joi.string().uri().required(),
+            // })
+        }),
         ScheduleModule.forRoot(),
         MailerModule.forRoot({
             transport: {

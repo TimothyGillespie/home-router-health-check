@@ -20,6 +20,8 @@ COPY package*.json ./
 RUN npm ci --only=production
 COPY --from=build /app/dist/apps/server .
 
+RUN rm package*.json
+
 EXPOSE 3333
 
 CMD ["node", "main.js"]

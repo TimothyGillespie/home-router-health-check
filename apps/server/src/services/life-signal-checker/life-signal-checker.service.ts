@@ -7,7 +7,7 @@ import {MailerService} from "@nestjs-modules/mailer";
 export class LifeSignalCheckerService {
 
     constructor(
-        private lifeSignalStoragService: LifeSignalStorageService,
+        private lifeSignalStorageService: LifeSignalStorageService,
         private emailService: MailerService,
     ) {}
 
@@ -16,8 +16,8 @@ export class LifeSignalCheckerService {
 
     @Cron(CronExpression.EVERY_MINUTE)
     checkIfAnyDead() {
-        console.log(`Checking ${this.lifeSignalStoragService.data.size} life signal(s)`)
-        this.lifeSignalStoragService.data.forEach((value, key) => {
+        console.log(`Checking ${this.lifeSignalStorageService.data.size} life signal(s)`)
+        this.lifeSignalStorageService.data.forEach((value, key) => {
             if(value.lastSignal !== null) {
                 if (value.status === 'UNSTARTED') {
                     value.status = 'ALIVE';

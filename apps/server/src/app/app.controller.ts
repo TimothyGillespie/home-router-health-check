@@ -1,25 +1,20 @@
 import {Body, Controller, Get, HttpStatus, Post, Query, Res} from '@nestjs/common';
 import { Response } from 'express';
-import { ConfigService } from '@nestjs/config';
 import {MailerService} from "@nestjs-modules/mailer";
 import {LifeSignalStorageService} from "../services/life-signal-storage/life-signal-storage.service";
-
-interface EnvironmentVariables {
-    CLIENT_SECRET: string;
-}
-
+import {ConfigService} from "@nestjs/config";
 
 @Controller()
 export class AppController {
     constructor(
-        private configService: ConfigService<EnvironmentVariables>,
         private emailService: MailerService,
         private lifeSignalStorageService: LifeSignalStorageService,
+        private configService: ConfigService,
     ) {}
 
     @Get('lifeSignal')
     getData(@Query('clientSecret') clientSecret, @Res() res: Response) {
-        const success = this.lifeSignalStorageService.registerLifeSignal(clientSecret);
+        this.lifeSignalStorageService.registerLifeSignal(clientSecret);
         console.log('Received life signal for ' + clientSecret);
         res.status(HttpStatus.OK).send();
     }
@@ -32,7 +27,7 @@ export class AppController {
             subject: 'Verify Life Signal Registration',
             template: 'verify',
             context: {
-                verificationLink: process.env.HOST + '/verify?verificationSecret=' + lifeSignalData.verificationSecret,
+                verificationLink: this.configService.get('SERVER_HOST') + '/verify?verificationSecret=' + lifeSignalData.verificationSecret,
             }
         });
 

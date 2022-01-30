@@ -18,6 +18,7 @@
     "@nestjs/typeorm": "^8.0.3",
     "express": "^4.17.2",
     "handlebars": "^4.7.7",
+    "joi": "^17.6.0",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.2",
     "reflect-metadata": "^0.1.13",
